@@ -375,6 +375,21 @@ defmodule Phoenix.ConnTest do
   end
 
   @doc """
+  Asserts the given status code, that we have an turbo stream response and
+  returns the response body if one was set or sent.
+
+  ## Examples
+
+      assert turbo_stream_response(conn, 200) =~ "<turbo_stream>"
+  """
+  @spec turbo_stream_response(Conn.t, status :: integer | atom) :: String.t
+  def turbo_stream_response(conn, status) do
+    body = response(conn, status)
+    _    = response_content_type(conn, :turbo_stream)
+    body
+  end
+
+  @doc """
   Asserts the given status code, that we have an html response and
   returns the response body if one was set or sent.
 
