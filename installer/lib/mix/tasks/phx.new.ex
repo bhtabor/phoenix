@@ -296,7 +296,9 @@ defmodule Mix.Tasks.Phx.New do
         Task.await_many(tasks, :infinity)
       end
 
-      print_missing_steps(cd_step ++ mix_step)
+      channel_step = ["$ mix phx.gen.socket User --from-channel Turbo.TurboStream"]
+
+      print_missing_steps(cd_step ++ mix_step ++ channel_step)
 
       if Project.ecto?(project) do
         print_ecto_info(generator)
