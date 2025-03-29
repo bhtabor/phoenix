@@ -19,6 +19,7 @@
 <%= if @html do %>
 // Include phoenix_html to handle method=PUT/DELETE in forms and buttons.
 import "phoenix_html"
+import "./turbo"
 // Establish Phoenix Socket and LiveView configuration.
 <%= @live_comment %>import {Socket} from "<%= @phoenix_js_path %>"
 <%= @live_comment %>import {LiveSocket} from "phoenix_live_view"
