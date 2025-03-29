@@ -26,6 +26,7 @@ defmodule <%= @web_namespace %> do
       # Import common connection and controller functions to use in pipelines
       import Plug.Conn
       import Phoenix.Controller<%= if @html do %>
+      import <%= @web_namespace %>.TurboController
       import Phoenix.LiveView.Router<% end %>
     end
   end
@@ -39,12 +40,13 @@ defmodule <%= @web_namespace %> do
   def controller do
     quote do
       use Phoenix.Controller,
-        formats: [:html, :json],
+        formats: [:html, :turbo_stream, :json],
         layouts: [html: <%= @web_namespace %>.Layouts]<%= if @gettext do %>
 
       use Gettext, backend: <%= @web_namespace %>.Gettext<% end %>
 
       import Plug.Conn
+      import <%= @web_namespace %>.TurboController
 
       unquote(verified_routes())
     end
@@ -89,6 +91,7 @@ defmodule <%= @web_namespace %> do
       import Phoenix.HTML
       # Core UI components
       import <%= @web_namespace %>.CoreComponents
+      import <%= @web_namespace %>.TurboComponents
 
       # Shortcut for generating JS commands
       alias Phoenix.LiveView.JS

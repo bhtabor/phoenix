@@ -12,6 +12,7 @@ defmodule Phx.New.Single do
      "phx_single/config/test.exs": "config/test.exs"},
     {:eex, :web,
      "phx_single/lib/app_name/application.ex": "lib/:app/application.ex",
+     "phx_single/lib/app_name/token.ex": "lib/:app/token.ex",
      "phx_single/lib/app_name.ex": "lib/:app.ex",
      "phx_web/controllers/error_json.ex": "lib/:lib_web_name/controllers/error_json.ex",
      "phx_web/endpoint.ex": "lib/:lib_web_name/endpoint.ex",
@@ -44,6 +45,12 @@ defmodule Phx.New.Single do
      "phx_test/controllers/error_html_test.exs":
        "test/:lib_web_name/controllers/error_html_test.exs",
      "phx_web/components/core_components.ex": "lib/:lib_web_name/components/core_components.ex",
+     "phx_web/components/turbo_components.ex": "lib/:lib_web_name/components/turbo_components.ex",
+     "phx_web/channels/turbo/turbo_stream_channel.ex":
+       "lib/:lib_web_name/channels/turbo/turbo_stream_channel.ex",
+     "phx_web/controllers/turbo_controller.ex": "lib/:lib_web_name/controllers/turbo_controller.ex",
+     "phx_web/controllers/turbo/turbo_stream.ex":
+       "lib/:lib_web_name/controllers/turbo/turbo_stream.ex",
      "phx_web/controllers/page_controller.ex": "lib/:lib_web_name/controllers/page_controller.ex",
      "phx_web/controllers/page_html.ex": "lib/:lib_web_name/controllers/page_html.ex",
      "phx_web/controllers/page_html/home.html.heex":
@@ -75,7 +82,11 @@ defmodule Phx.New.Single do
 
   template(:js, [
     {:eex, :web,
-     "phx_assets/app.js": "assets/js/app.js", "phx_assets/topbar.js": "assets/vendor/topbar.js"}
+     "phx_assets/app.js": "assets/js/app.js",
+     "phx_assets/turbo/turbo_stream_channel_source.js": "assets/js/turbo/turbo_stream_channel_source.js",
+     "phx_assets/turbo/index.js": "assets/js/turbo/index.js",
+     "phx_assets/turbo.js": "assets/vendor/turbo.js",
+     "phx_assets/topbar.js": "assets/vendor/topbar.js"}
   ])
 
   template(:no_js, [
