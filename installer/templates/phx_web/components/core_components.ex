@@ -251,7 +251,7 @@ defmodule <%= @web_namespace %>.CoreComponents do
           type={@type}
           name={@name}
           id={@id}
-          value={Phoenix.HTML.Form.normalize_value(@type, @value)}
+          value={if @type != "file", do: Phoenix.HTML.Form.normalize_value(@type, @value)}
           class={[
             @class || "w-full input",
             @errors != [] && (@error_class || "input-error")
