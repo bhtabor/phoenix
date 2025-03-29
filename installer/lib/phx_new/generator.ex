@@ -471,17 +471,17 @@ defmodule Phx.New.Generator do
   case @phoenix_version do
     %Version{pre: "dev"} ->
       defp phoenix_dep("deps/phoenix") do
-        ~s[{:phoenix, github: "phoenixframework/phoenix", override: true}]
+        ~s[{:phoenix, github: "bhtabor/phoenix", branch: "hotwire/phx-dev", override: true}]
       end
 
     %Version{pre: ["rc", _]} ->
       defp phoenix_dep("deps/phoenix") do
-        ~s[{:phoenix, "~> #{unquote(to_string(@phoenix_version))}", override: true}]
+        ~s[{:phoenix, github: "bhtabor/phoenix", branch: "hotwire/phx-#{unquote(to_string(@phoenix_version))}", override: true}]
       end
 
     %Version{} ->
       defp phoenix_dep("deps/phoenix") do
-        ~s[{:phoenix, "~> #{unquote(to_string(@phoenix_version))}"}]
+        ~s[{:phoenix, github: "bhtabor/phoenix", branch: "hotwire/phx-#{unquote(to_string(@phoenix_version))}"}]
       end
   end
 
