@@ -26,6 +26,7 @@ defmodule <%= @web_namespace %> do
       # Import common connection and controller functions to use in pipelines
       import Plug.Conn
       import Phoenix.Controller<%= if @html do %>
+      import <%= @web_namespace %>.Turbo.Plug
       import Phoenix.LiveView.Router<% end %>
     end
   end
@@ -43,6 +44,7 @@ defmodule <%= @web_namespace %> do
       use Gettext, backend: <%= @web_namespace %>.Gettext<% end %>
 
       import Plug.Conn
+      import <%= @web_namespace %>.Turbo.Controller
 
       unquote(verified_routes())
     end
@@ -86,6 +88,7 @@ defmodule <%= @web_namespace %> do
       import Phoenix.HTML
       # Core UI components
       import <%= @web_namespace %>.CoreComponents
+      import <%= @web_namespace %>.TurboComponents
 
       # Common modules used in templates
       alias Phoenix.LiveView.JS
