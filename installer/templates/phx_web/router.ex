@@ -3,6 +3,7 @@ defmodule <%= @web_namespace %>.Router do
 
   pipeline :browser do
     plug :accepts, ["html"]
+    plug :fetch_turbo_headers
     plug :fetch_session
     plug :fetch_live_flash
     plug :put_root_layout, html: {<%= @web_namespace %>.Layouts, :root}
