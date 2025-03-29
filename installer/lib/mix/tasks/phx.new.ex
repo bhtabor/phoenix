@@ -296,7 +296,14 @@ defmodule Mix.Tasks.Phx.New do
         Task.await_many(tasks, :infinity)
       end
 
-      print_missing_steps(cd_step ++ mix_step)
+      channel_step =
+        if project.opts[:umbrella] do
+          ["$ cd #{relative_app_path(project.web_path)}", "$ mix phx.gen.socket User --from-channel TurboStream"]
+        else
+          ["$ mix phx.gen.socket User --from-channel TurboStream"]
+        end
+
+      print_missing_steps(cd_step ++ mix_step ++ channel_step)
 
       if Project.ecto?(project) do
         print_ecto_info(generator)
