@@ -49,8 +49,10 @@ defmodule <%= @web_namespace %>.CoreComponents do
       phx-remove={hide_modal(@id)}
       data-cancel={JS.exec(@on_cancel, "phx-remove")}
       class="relative z-50 hidden"
+      data-controller="modal"
+      data-modal-show-value={@show}
     >
-      <div id={"#{@id}-bg"} class="bg-zinc-50/90 fixed inset-0 transition-opacity" aria-hidden="true" />
+      <div id={"#{@id}-bg"} class="bg-zinc-50/90 fixed inset-0 transition-opacity" aria-hidden="true" data-modal-target="background" />
       <div
         class="fixed inset-0 overflow-y-auto"
         aria-labelledby={"#{@id}-title"}
@@ -67,6 +69,8 @@ defmodule <%= @web_namespace %>.CoreComponents do
               phx-key="escape"
               phx-click-away={JS.exec("data-cancel", to: "##{@id}")}
               class="shadow-zinc-700/10 ring-zinc-700/10 relative hidden rounded-2xl bg-white p-14 shadow-lg ring-1 transition"
+              data-modal-target="container"
+              data-action="keydown.esc@window->modal#cancel"
             >
               <div class="absolute top-6 right-5">
                 <button
@@ -74,6 +78,7 @@ defmodule <%= @web_namespace %>.CoreComponents do
                   type="button"
                   class="-m-3 flex-none p-3 opacity-20 hover:opacity-40"
                   aria-label=<%= maybe_heex_attr_gettext.("close", @gettext) %>
+                  data-action="click->modal#cancel"
                 >
                   <.icon name="hero-x-mark-solid" class="h-5 w-5" />
                 </button>
@@ -119,6 +124,9 @@ defmodule <%= @web_namespace %>.CoreComponents do
         @kind == :info && "bg-emerald-50 text-emerald-800 ring-emerald-500 fill-cyan-900",
         @kind == :error && "bg-rose-50 text-rose-900 shadow-md ring-rose-500 fill-rose-900"
       ]}
+      data-controller="css"
+      data-css-target="togglable"
+      data-css-toggle-class="hidden"
       {@rest}
     >
       <p :if={@title} class="flex items-center gap-1.5 text-sm font-semibold leading-6">
@@ -127,7 +135,7 @@ defmodule <%= @web_namespace %>.CoreComponents do
         {@title}
       </p>
       <p class="mt-2 text-sm leading-5">{msg}</p>
-      <button type="button" class="group absolute top-1 right-1 p-2" aria-label=<%= maybe_heex_attr_gettext.("close", @gettext) %>>
+      <button type="button" class="group absolute top-1 right-1 p-2" aria-label=<%= maybe_heex_attr_gettext.("close", @gettext) %> data-action="css#toggle">
         <.icon name="hero-x-mark-solid" class="h-5 w-5 opacity-40 group-hover:opacity-70" />
       </button>
     </div>
@@ -554,6 +562,8 @@ defmodule <%= @web_namespace %>.CoreComponents do
       <.back navigate={~p"/posts"}>Back to posts</.back>
   """
   attr :navigate, :any, required: true
+  attr :rest, :global, doc: "the arbitrary HTML attributes to apply to the link tag"
+
   slot :inner_block, required: true
 
   def back(assigns) do
@@ -562,6 +572,7 @@ defmodule <%= @web_namespace %>.CoreComponents do
       <.link
         navigate={@navigate}
         class="text-sm font-semibold leading-6 text-zinc-900 hover:text-zinc-700"
+        {@rest}
       >
         <.icon name="hero-arrow-left-solid" class="h-3 w-3" />
         {render_slot(@inner_block)}
