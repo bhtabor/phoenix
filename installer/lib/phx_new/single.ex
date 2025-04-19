@@ -62,7 +62,18 @@ defmodule Phx.New.Single do
     {:eex, :web, "phx_assets/logo.svg": "priv/static/images/logo.svg"},
     {:text, :web,
      "phx_priv/templates/phx.gen.html/controller.ex": "priv/templates/phx.gen.html/controller.ex",
-     "phx_priv/templates/phx.gen.html/controller_test.exs": "priv/templates/phx.gen.html/controller_test.exs"}
+     "phx_priv/templates/phx.gen.html/controller_test.exs": "priv/templates/phx.gen.html/controller_test.exs",
+     "phx_priv/templates/phx.gen.auth/auth.ex": "priv/templates/phx.gen.html/auth.ex",
+     "phx_priv/templates/phx.gen.auth/auth_test.exs": "priv/templates/phx.gen.html/auth_test.exs",
+     "phx_priv/templates/phx.gen.auth/confirmation_live_test.exs": "priv/templates/phx.gen.html/confirmation_live_test.exs",
+     "phx_priv/templates/phx.gen.auth/login_live_test.exs": "priv/templates/phx.gen.html/login_live_test.exs",
+     "phx_priv/templates/phx.gen.auth/registration_controller.ex": "priv/templates/phx.gen.auth/registration_controller.ex",
+     "phx_priv/templates/phx.gen.auth/registration_controller_test.exs": "priv/templates/phx.gen.auth/registration_controller_test.exs",
+     "phx_priv/templates/phx.gen.auth/session_controller.ex": "priv/templates/phx.gen.auth/session_controller.ex",
+     "phx_priv/templates/phx.gen.auth/session_controller_test.exs": "priv/templates/phx.gen.auth/session_controller_test.exs",
+     "phx_priv/templates/phx.gen.auth/settings_controller.ex": "priv/templates/phx.gen.auth/settings_controller.ex",
+     "phx_priv/templates/phx.gen.auth/settings_controller_test.exs": "priv/templates/phx.gen.auth/settings_controller_test.exs",
+     "phx_priv/templates/phx.gen.auth/settings_live_test.exs": "priv/templates/phx.gen.auth/settings_live_test.exs"}
   ])
 
   template(:ecto, [
