@@ -23,10 +23,13 @@ defmodule <%= inspect context.web_module %>.<%= inspect Module.concat(schema.web
           :info,
           "An email was sent to #{<%= schema.singular %>.email}, please access it to confirm your account."
         )
+        |> put_status(:see_other)
         |> redirect(to: ~p"<%= schema.route_prefix %>/log-in")
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        render(conn, :new, changeset: changeset)
+        conn
+        |> put_status(:unprocessable_entity)
+        |> render(:new, changeset: changeset)
     end
   end
 end
