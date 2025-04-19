@@ -113,7 +113,7 @@ defmodule <%= inspect context.web_module %>.<%= inspect Module.concat(schema.web
 
       new_password_conn = follow_trigger_action(form, conn)
 
-      assert redirected_to(new_password_conn) == ~p"<%= schema.route_prefix %>/settings"
+      assert redirected_to(new_password_conn, 303) == ~p"<%= schema.route_prefix %>/settings"
 
       assert get_session(new_password_conn, :<%= schema.singular %>_token) != get_session(conn, :<%= schema.singular %>_token)
 
