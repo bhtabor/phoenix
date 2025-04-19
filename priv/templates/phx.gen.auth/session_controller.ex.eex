@@ -25,6 +25,7 @@ defmodule <%= inspect context.web_module %>.<%= inspect Module.concat(schema.web
       _ ->
         conn
         |> put_flash(:error, "The link is invalid or it has expired.")
+        |> put_status(:see_other)
         |> redirect(to: ~p"<%= schema.route_prefix %>/log-in")
     end
   end
@@ -42,6 +43,7 @@ defmodule <%= inspect context.web_module %>.<%= inspect Module.concat(schema.web
       conn
       |> put_flash(:error, "Invalid email or password")
       |> put_flash(:email, String.slice(email, 0, 160))
+      |> put_status(:see_other)
       |> redirect(to: ~p"<%= schema.route_prefix %>/log-in")
     end
   end
@@ -83,6 +85,7 @@ defmodule <%= inspect context.web_module %>.<%= inspect Module.concat(schema.web
       {:error, :not_found} ->
         conn
         |> put_flash(:error, "The link is invalid or it has expired.")
+        |> put_status(:unprocessable_entity)
         |> render(:new, form: Phoenix.Component.to_form(%{}, as: "<%= schema.singular %>"))
     end
   end
@@ -99,6 +102,7 @@ defmodule <%= inspect context.web_module %>.<%= inspect Module.concat(schema.web
       # In order to prevent user enumeration attacks, don't disclose whether the email is registered.
       conn
       |> put_flash(:error, "Invalid email or password")
+      |> put_status(:unprocessable_entity)
       |> render(:new, form: form)
     end
   end
@@ -117,6 +121,7 @@ defmodule <%= inspect context.web_module %>.<%= inspect Module.concat(schema.web
 
     conn
     |> put_flash(:info, info)
+    |> put_status(:see_other)
     |> redirect(to: ~p"<%= schema.route_prefix %>/log-in")
   end
 
@@ -131,6 +136,7 @@ defmodule <%= inspect context.web_module %>.<%= inspect Module.concat(schema.web
     else
       conn
       |> put_flash(:error, "Magic link is invalid or it has expired.")
+      |> put_status(:see_other)
       |> redirect(to: ~p"<%= schema.route_prefix %>/log-in")
     end
   end<% end %>
