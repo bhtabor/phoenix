@@ -15,7 +15,7 @@ defmodule <%= inspect context.web_module %>.<%= inspect Module.concat(schema.web
     test "redirects if already logged in", %{conn: conn} do
       conn = conn |> log_in_<%= schema.singular %>(<%= schema.singular %>_fixture()) |> get(~p"<%= schema.route_prefix %>/register")
 
-      assert redirected_to(conn) == ~p"/"
+      assert redirected_to(conn, 303) == ~p"/"
     end
   end
 
@@ -30,7 +30,7 @@ defmodule <%= inspect context.web_module %>.<%= inspect Module.concat(schema.web
         })
 
       refute get_session(conn, :<%= schema.singular %>_token)
-      assert redirected_to(conn) == ~p"<%= schema.route_prefix %>/log-in"
+      assert redirected_to(conn, 303) == ~p"<%= schema.route_prefix %>/log-in"
 
       assert conn.assigns.flash["info"] =~
                ~r/An email was sent to .*, please access it to confirm your account/
@@ -42,7 +42,7 @@ defmodule <%= inspect context.web_module %>.<%= inspect Module.concat(schema.web
           "<%= schema.singular %>" => %{"email" => "with spaces"}
         })
 
-      response = html_response(conn, 200)
+      response = html_response(conn, 422)
       assert response =~ "Register"
       assert response =~ "must have the @ sign and no spaces"
     end
