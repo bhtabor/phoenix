@@ -37,6 +37,7 @@ defmodule <%= inspect auth_module %> do
 
     conn
     |> create_or_extend_session(<%= schema.singular %>, params)
+    |> put_status(:see_other)
     |> redirect(to: <%= schema.singular %>_return_to || signed_in_path(conn))
   end
 
@@ -56,6 +57,7 @@ defmodule <%= inspect auth_module %> do
     conn
     |> renew_session(nil)
     |> delete_resp_cookie(@remember_me_cookie)
+    |> put_status(:see_other)
     |> redirect(to: ~p"/")
   end
 
@@ -278,6 +280,7 @@ defmodule <%= inspect auth_module %> do
       conn
       |> put_flash(:error, "You must re-authenticate to access this page.")
       |> maybe_store_return_to()
+      |> put_status(:see_other)
       |> redirect(to: ~p"<%= schema.route_prefix %>/log-in")
       |> halt()
     end
@@ -289,6 +292,7 @@ defmodule <%= inspect auth_module %> do
   def redirect_if_<%= schema.singular %>_is_authenticated(conn, _opts) do
     if conn.assigns.<%= scope_config.scope.assign_key %> do
       conn
+      |> put_status(:see_other)
       |> redirect(to: signed_in_path(conn))
       |> halt()
     else
@@ -308,6 +312,7 @@ defmodule <%= inspect auth_module %> do
       conn
       |> put_flash(:error, "You must log in to access this page.")
       |> maybe_store_return_to()
+      |> put_status(:see_other)
       |> redirect(to: ~p"<%= schema.route_prefix %>/log-in")
       |> halt()
     end
