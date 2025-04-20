@@ -25,8 +25,8 @@ defmodule <%= inspect context.web_module %>.<%= inspect Module.concat(schema.web
     test "redirects to show when data is valid", %{conn: conn} do
       conn = post(conn, ~p"<%= schema.route_prefix %>", <%= schema.singular %>: @create_attrs)
 
-      assert %{id: id} = redirected_params(conn)
-      assert redirected_to(conn) == ~p"<%= schema.route_prefix %>/#{id}"
+      assert %{id: id} = redirected_params(conn, 303)
+      assert redirected_to(conn, 303) == ~p"<%= schema.route_prefix %>/#{id}"
 
       conn = get(conn, ~p"<%= schema.route_prefix %>/#{id}")
       assert html_response(conn, 200) =~ "<%= schema.human_singular %> #{id}"
@@ -34,7 +34,7 @@ defmodule <%= inspect context.web_module %>.<%= inspect Module.concat(schema.web
 
     test "renders errors when data is invalid", %{conn: conn} do
       conn = post(conn, ~p"<%= schema.route_prefix %>", <%= schema.singular %>: @invalid_attrs)
-      assert html_response(conn, 200) =~ "New <%= schema.human_singular %>"
+      assert html_response(conn, 422) =~ "New <%= schema.human_singular %>"
     end
   end
 
@@ -52,7 +52,7 @@ defmodule <%= inspect context.web_module %>.<%= inspect Module.concat(schema.web
 
     test "redirects when data is valid", %{conn: conn, <%= schema.singular %>: <%= schema.singular %>} do
       conn = put(conn, ~p"<%= schema.route_prefix %>/#{<%= schema.singular %>}", <%= schema.singular %>: @update_attrs)
-      assert redirected_to(conn) == ~p"<%= schema.route_prefix %>/#{<%= schema.singular %>}"
+      assert redirected_to(conn, 303) == ~p"<%= schema.route_prefix %>/#{<%= schema.singular %>}"
 
       conn = get(conn, ~p"<%= schema.route_prefix %>/#{<%= schema.singular %>}")<%= if schema.string_attr do %>
       assert html_response(conn, 200) =~ <%= inspect Mix.Phoenix.Schema.default_param(schema, :update) %><% else %>
@@ -61,7 +61,7 @@ defmodule <%= inspect context.web_module %>.<%= inspect Module.concat(schema.web
 
     test "renders errors when data is invalid", %{conn: conn, <%= schema.singular %>: <%= schema.singular %>} do
       conn = put(conn, ~p"<%= schema.route_prefix %>/#{<%= schema.singular %>}", <%= schema.singular %>: @invalid_attrs)
-      assert html_response(conn, 200) =~ "Edit <%= schema.human_singular %>"
+      assert html_response(conn, 422) =~ "Edit <%= schema.human_singular %>"
     end
   end
 
@@ -70,7 +70,7 @@ defmodule <%= inspect context.web_module %>.<%= inspect Module.concat(schema.web
 
     test "deletes chosen <%= schema.singular %>", %{conn: conn, <%= schema.singular %>: <%= schema.singular %>} do
       conn = delete(conn, ~p"<%= schema.route_prefix %>/#{<%= schema.singular %>}")
-      assert redirected_to(conn) == ~p"<%= schema.route_prefix %>"
+      assert redirected_to(conn, 303) == ~p"<%= schema.route_prefix %>"
 
       assert_error_sent 404, fn ->
         get(conn, ~p"<%= schema.route_prefix %>/#{<%= schema.singular %>}")

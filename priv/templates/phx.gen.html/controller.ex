@@ -19,10 +19,13 @@ defmodule <%= inspect context.web_module %>.<%= inspect Module.concat(schema.web
       {:ok, <%= schema.singular %>} ->
         conn
         |> put_flash(:info, "<%= schema.human_singular %> created successfully.")
+        |> put_status(:see_other)
         |> redirect(to: ~p"<%= schema.route_prefix %>/#{<%= schema.singular %>}")
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        render(conn, :new, changeset: changeset)
+        conn
+        |> put_status(:unprocessable_entity)
+        |> render(:new, changeset: changeset)
     end
   end
 
@@ -44,10 +47,13 @@ defmodule <%= inspect context.web_module %>.<%= inspect Module.concat(schema.web
       {:ok, <%= schema.singular %>} ->
         conn
         |> put_flash(:info, "<%= schema.human_singular %> updated successfully.")
+        |> put_status(:see_other)
         |> redirect(to: ~p"<%= schema.route_prefix %>/#{<%= schema.singular %>}")
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        render(conn, :edit, <%= schema.singular %>: <%= schema.singular %>, changeset: changeset)
+        conn
+        |> put_status(:unprocessable_entity)
+        |> render(:edit, <%= schema.singular %>: <%= schema.singular %>, changeset: changeset)
     end
   end
 
@@ -57,6 +63,7 @@ defmodule <%= inspect context.web_module %>.<%= inspect Module.concat(schema.web
 
     conn
     |> put_flash(:info, "<%= schema.human_singular %> deleted successfully.")
+    |> put_status(:see_other)
     |> redirect(to: ~p"<%= schema.route_prefix %>")
   end
 end
