@@ -22,6 +22,7 @@ defmodule <%= inspect context.web_module %>.<%= inspect Module.concat(schema.web
       :info,
       "If your email is in our system, you will receive instructions to reset your password shortly."
     )
+    |> put_status(:see_other)
     |> redirect(to: ~p"/")
   end
 
@@ -36,10 +37,13 @@ defmodule <%= inspect context.web_module %>.<%= inspect Module.concat(schema.web
       {:ok, _} ->
         conn
         |> put_flash(:info, "Password reset successfully.")
+        |> put_status(:see_other)
         |> redirect(to: ~p"<%= schema.route_prefix %>/log_in")
 
       {:error, changeset} ->
-        render(conn, :edit, changeset: changeset)
+        conn
+        |> put_status(:unprocessable_entity)
+        |> render(:edit, changeset: changeset)
     end
   end
 
@@ -51,6 +55,7 @@ defmodule <%= inspect context.web_module %>.<%= inspect Module.concat(schema.web
     else
       conn
       |> put_flash(:error, "Reset password link is invalid or it has expired.")
+      |> put_status(:see_other)
       |> redirect(to: ~p"/")
       |> halt()
     end

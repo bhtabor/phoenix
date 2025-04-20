@@ -16,7 +16,7 @@ defmodule <%= inspect context.web_module %>.<%= inspect Module.concat(schema.web
     test "redirects if <%= schema.singular %> is not logged in" do
       conn = build_conn()
       conn = get(conn, ~p"<%= schema.route_prefix %>/settings")
-      assert redirected_to(conn) == ~p"<%= schema.route_prefix %>/log_in"
+      assert redirected_to(conn, 303) == ~p"<%= schema.route_prefix %>/log_in"
     end
   end
 
@@ -32,7 +32,7 @@ defmodule <%= inspect context.web_module %>.<%= inspect Module.concat(schema.web
           }
         })
 
-      assert redirected_to(new_password_conn) == ~p"<%= schema.route_prefix %>/settings"
+      assert redirected_to(new_password_conn, 303) == ~p"<%= schema.route_prefix %>/settings"
 
       assert get_session(new_password_conn, :<%= schema.singular %>_token) != get_session(conn, :<%= schema.singular %>_token)
 
@@ -53,7 +53,7 @@ defmodule <%= inspect context.web_module %>.<%= inspect Module.concat(schema.web
           }
         })
 
-      response = html_response(old_password_conn, 200)
+      response = html_response(old_password_conn, 422)
       assert response =~ "Settings"
       assert response =~ "should be at least 12 character(s)"
       assert response =~ "does not match password"
@@ -73,7 +73,7 @@ defmodule <%= inspect context.web_module %>.<%= inspect Module.concat(schema.web
           "<%= schema.singular %>" => %{"email" => unique_<%= schema.singular %>_email()}
         })
 
-      assert redirected_to(conn) == ~p"<%= schema.route_prefix %>/settings"
+      assert redirected_to(conn, 303) == ~p"<%= schema.route_prefix %>/settings"
 
       assert Phoenix.Flash.get(conn.assigns.flash, :info) =~
                "A link to confirm your email"
@@ -89,7 +89,7 @@ defmodule <%= inspect context.web_module %>.<%= inspect Module.concat(schema.web
           "<%= schema.singular %>" => %{"email" => "with spaces"}
         })
 
-      response = html_response(conn, 200)
+      response = html_response(conn, 422)
       assert response =~ "Settings"
       assert response =~ "must have the @ sign and no spaces"
       assert response =~ "is not valid"
@@ -110,7 +110,7 @@ defmodule <%= inspect context.web_module %>.<%= inspect Module.concat(schema.web
 
     test "updates the <%= schema.singular %> email once", %{conn: conn, <%= schema.singular %>: <%= schema.singular %>, token: token, email: email} do
       conn = get(conn, ~p"<%= schema.route_prefix %>/settings/confirm_email/#{token}")
-      assert redirected_to(conn) == ~p"<%= schema.route_prefix %>/settings"
+      assert redirected_to(conn, 303) == ~p"<%= schema.route_prefix %>/settings"
 
       assert Phoenix.Flash.get(conn.assigns.flash, :info) =~
                "Email changed successfully"
@@ -120,7 +120,7 @@ defmodule <%= inspect context.web_module %>.<%= inspect Module.concat(schema.web
 
       conn = get(conn, ~p"<%= schema.route_prefix %>/settings/confirm_email/#{token}")
 
-      assert redirected_to(conn) == ~p"<%= schema.route_prefix %>/settings"
+      assert redirected_to(conn, 303) == ~p"<%= schema.route_prefix %>/settings"
 
       assert Phoenix.Flash.get(conn.assigns.flash, :error) =~
                "Email change link is invalid or it has expired"
@@ -128,7 +128,7 @@ defmodule <%= inspect context.web_module %>.<%= inspect Module.concat(schema.web
 
     test "does not update email with invalid token", %{conn: conn, <%= schema.singular %>: <%= schema.singular %>} do
       conn = get(conn, ~p"<%= schema.route_prefix %>/settings/confirm_email/oops")
-      assert redirected_to(conn) == ~p"<%= schema.route_prefix %>/settings"
+      assert redirected_to(conn, 303) == ~p"<%= schema.route_prefix %>/settings"
 
       assert Phoenix.Flash.get(conn.assigns.flash, :error) =~
                "Email change link is invalid or it has expired"
@@ -139,7 +139,7 @@ defmodule <%= inspect context.web_module %>.<%= inspect Module.concat(schema.web
     test "redirects if <%= schema.singular %> is not logged in", %{token: token} do
       conn = build_conn()
       conn = get(conn, ~p"<%= schema.route_prefix %>/settings/confirm_email/#{token}")
-      assert redirected_to(conn) == ~p"<%= schema.route_prefix %>/log_in"
+      assert redirected_to(conn, 303) == ~p"<%= schema.route_prefix %>/log_in"
     end
   end
 end

@@ -21,6 +21,7 @@ defmodule <%= inspect context.web_module %>.<%= inspect Module.concat(schema.web
       "If your email is in our system and it has not been confirmed yet, " <>
         "you will receive an email with instructions shortly."
     )
+    |> put_status(:see_other)
     |> redirect(to: ~p"/")
   end
 
@@ -35,6 +36,7 @@ defmodule <%= inspect context.web_module %>.<%= inspect Module.concat(schema.web
       {:ok, _} ->
         conn
         |> put_flash(:info, "<%= schema.human_singular %> confirmed successfully.")
+        |> put_status(:see_other)
         |> redirect(to: ~p"/")
 
       :error ->
@@ -44,11 +46,14 @@ defmodule <%= inspect context.web_module %>.<%= inspect Module.concat(schema.web
         # a warning message.
         case conn.assigns do
           %{current_<%= schema.singular %>: %{confirmed_at: confirmed_at}} when not is_nil(confirmed_at) ->
-            redirect(conn, to: ~p"/")
+            conn
+            |> put_status(:see_other)
+            |> redirect(to: ~p"/")
 
           %{} ->
             conn
             |> put_flash(:error, "<%= schema.human_singular %> confirmation link is invalid or it has expired.")
+            |> put_status(:see_other)
             |> redirect(to: ~p"/")
         end
     end

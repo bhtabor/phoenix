@@ -27,10 +27,13 @@ defmodule <%= inspect context.web_module %>.<%= inspect Module.concat(schema.web
           :info,
           "A link to confirm your email change has been sent to the new address."
         )
+        |> put_status(:see_other)
         |> redirect(to: ~p"<%= schema.route_prefix %>/settings")
 
       {:error, changeset} ->
-        render(conn, :edit, email_changeset: changeset)
+        conn
+        |> put_status(:unprocessable_entity)
+        |> render(:edit, email_changeset: changeset)
     end
   end
 
@@ -46,7 +49,9 @@ defmodule <%= inspect context.web_module %>.<%= inspect Module.concat(schema.web
         |> <%= inspect schema.alias %>Auth.log_in_<%= schema.singular %>(<%= schema.singular %>)
 
       {:error, changeset} ->
-        render(conn, :edit, password_changeset: changeset)
+        conn
+        |> put_status(:unprocessable_entity)
+        |> render(:edit, password_changeset: changeset)
     end
   end
 
@@ -55,11 +60,13 @@ defmodule <%= inspect context.web_module %>.<%= inspect Module.concat(schema.web
       :ok ->
         conn
         |> put_flash(:info, "Email changed successfully.")
+        |> put_status(:see_other)
         |> redirect(to: ~p"<%= schema.route_prefix %>/settings")
 
       :error ->
         conn
         |> put_flash(:error, "Email change link is invalid or it has expired.")
+        |> put_status(:see_other)
         |> redirect(to: ~p"<%= schema.route_prefix %>/settings")
     end
   end

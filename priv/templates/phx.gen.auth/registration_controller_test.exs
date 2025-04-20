@@ -15,7 +15,7 @@ defmodule <%= inspect context.web_module %>.<%= inspect Module.concat(schema.web
     test "redirects if already logged in", %{conn: conn} do
       conn = conn |> log_in_<%= schema.singular %>(<%= schema.singular %>_fixture()) |> get(~p"<%= schema.route_prefix %>/register")
 
-      assert redirected_to(conn) == ~p"/"
+      assert redirected_to(conn, 303) == ~p"/"
     end
   end
 
@@ -30,7 +30,7 @@ defmodule <%= inspect context.web_module %>.<%= inspect Module.concat(schema.web
         })
 
       assert get_session(conn, :<%= schema.singular %>_token)
-      assert redirected_to(conn) == ~p"/"
+      assert redirected_to(conn, 303) == ~p"/"
 
       # Now do a logged in request and assert on the menu
       conn = get(conn, ~p"/")
@@ -46,7 +46,7 @@ defmodule <%= inspect context.web_module %>.<%= inspect Module.concat(schema.web
           "<%= schema.singular %>" => %{"email" => "with spaces", "password" => "too short"}
         })
 
-      response = html_response(conn, 200)
+      response = html_response(conn, 422)
       assert response =~ "Register"
       assert response =~ "must have the @ sign and no spaces"
       assert response =~ "should be at least 12 character"

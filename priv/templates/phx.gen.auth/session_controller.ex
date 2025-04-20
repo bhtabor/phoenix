@@ -30,6 +30,7 @@ defmodule <%= inspect context.web_module %>.<%= inspect Module.concat(schema.web
       conn
       |> put_flash(:error, "Invalid email or password")
       |> put_flash(:email, String.slice(email, 0, 160))
+      |> put_status(:see_other)
       |> redirect(to: ~p"<%= schema.route_prefix %>/log_in")
     end
   end<% else %>
@@ -47,7 +48,9 @@ defmodule <%= inspect context.web_module %>.<%= inspect Module.concat(schema.web
       |> <%= inspect schema.alias %>Auth.log_in_<%= schema.singular %>(<%= schema.singular %>, <%= schema.singular %>_params)
     else
       # In order to prevent user enumeration attacks, don't disclose whether the email is registered.
-      render(conn, :new, error_message: "Invalid email or password")
+      conn
+      |> put_status(:unprocessable_entity)
+      |> render(:new, error_message: "Invalid email or password")
     end
   end<% end %>
 

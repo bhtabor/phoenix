@@ -25,7 +25,7 @@ defmodule <%= inspect context.web_module %>.<%= inspect Module.concat(schema.web
           "<%= schema.singular %>" => %{"email" => <%= schema.singular %>.email}
         })
 
-      assert redirected_to(conn) == ~p"/"
+      assert redirected_to(conn, 303) == ~p"/"
 
       assert Phoenix.Flash.get(conn.assigns.flash, :info) =~
                "If your email is in our system"
@@ -41,7 +41,7 @@ defmodule <%= inspect context.web_module %>.<%= inspect Module.concat(schema.web
           "<%= schema.singular %>" => %{"email" => <%= schema.singular %>.email}
         })
 
-      assert redirected_to(conn) == ~p"/"
+      assert redirected_to(conn, 303) == ~p"/"
 
       assert Phoenix.Flash.get(conn.assigns.flash, :info) =~
                "If your email is in our system"
@@ -55,7 +55,7 @@ defmodule <%= inspect context.web_module %>.<%= inspect Module.concat(schema.web
           "<%= schema.singular %>" => %{"email" => "unknown@example.com"}
         })
 
-      assert redirected_to(conn) == ~p"/"
+      assert redirected_to(conn, 303) == ~p"/"
 
       assert Phoenix.Flash.get(conn.assigns.flash, :info) =~
                "If your email is in our system"
@@ -83,7 +83,7 @@ defmodule <%= inspect context.web_module %>.<%= inspect Module.concat(schema.web
         end)
 
       conn = post(conn, ~p"<%= schema.route_prefix %>/confirm/#{token}")
-      assert redirected_to(conn) == ~p"/"
+      assert redirected_to(conn, 303) == ~p"/"
 
       assert Phoenix.Flash.get(conn.assigns.flash, :info) =~
                "<%= schema.human_singular %> confirmed successfully"
@@ -94,7 +94,7 @@ defmodule <%= inspect context.web_module %>.<%= inspect Module.concat(schema.web
 
       # When not logged in
       conn = post(conn, ~p"<%= schema.route_prefix %>/confirm/#{token}")
-      assert redirected_to(conn) == ~p"/"
+      assert redirected_to(conn, 303) == ~p"/"
 
       assert Phoenix.Flash.get(conn.assigns.flash, :error) =~
                "<%= schema.human_singular %> confirmation link is invalid or it has expired"
@@ -105,13 +105,13 @@ defmodule <%= inspect context.web_module %>.<%= inspect Module.concat(schema.web
         |> log_in_<%= schema.singular %>(<%= schema.singular %>)
         |> post(~p"<%= schema.route_prefix %>/confirm/#{token}")
 
-      assert redirected_to(conn) == ~p"/"
+      assert redirected_to(conn, 303) == ~p"/"
       refute Phoenix.Flash.get(conn.assigns.flash, :error)
     end
 
     test "does not confirm email with invalid token", %{conn: conn, <%= schema.singular %>: <%= schema.singular %>} do
       conn = post(conn, ~p"<%= schema.route_prefix %>/confirm/oops")
-      assert redirected_to(conn) == ~p"/"
+      assert redirected_to(conn, 303) == ~p"/"
 
       assert Phoenix.Flash.get(conn.assigns.flash, :error) =~
                "<%= schema.human_singular %> confirmation link is invalid or it has expired"

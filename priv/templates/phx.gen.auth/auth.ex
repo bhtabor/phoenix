@@ -33,6 +33,7 @@ defmodule <%= inspect auth_module %> do
     |> renew_session()
     |> put_token_in_session(token)
     |> maybe_write_remember_me_cookie(token, params)
+    |> put_status(:see_other)
     |> redirect(to: <%= schema.singular %>_return_to || signed_in_path(conn))
   end
 
@@ -83,6 +84,7 @@ defmodule <%= inspect auth_module %> do
     conn
     |> renew_session()
     |> delete_resp_cookie(@remember_me_cookie)
+    |> put_status(:see_other)
     |> redirect(to: ~p"/")
   end
 
@@ -188,6 +190,7 @@ defmodule <%= inspect auth_module %> do
   def redirect_if_<%= schema.singular %>_is_authenticated(conn, _opts) do
     if conn.assigns[:current_<%= schema.singular %>] do
       conn
+      |> put_status(:see_other)
       |> redirect(to: signed_in_path(conn))
       |> halt()
     else
@@ -208,6 +211,7 @@ defmodule <%= inspect auth_module %> do
       conn
       |> put_flash(:error, "You must log in to access this page.")
       |> maybe_store_return_to()
+      |> put_status(:see_other)
       |> redirect(to: ~p"<%= schema.route_prefix %>/log_in")
       |> halt()
     end
