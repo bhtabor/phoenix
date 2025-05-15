@@ -57,6 +57,9 @@ defmodule <%= @web_namespace %>.CoreComponents do
       phx-click={JS.push("lv:clear-flash", value: %{key: @kind}) |> hide("##{@id}")}
       role="alert"
       class="toast toast-top toast-end z-50"
+      data-controller="css"
+      data-css-target="togglable"
+      data-css-toggle-class="hidden"
       {@rest}
     >
       <div class={[
@@ -71,7 +74,12 @@ defmodule <%= @web_namespace %>.CoreComponents do
           <p>{msg}</p>
         </div>
         <div class="flex-1" />
-        <button type="button" class="group self-start cursor-pointer" aria-label=<%= maybe_heex_attr_gettext.("close", @gettext) %>>
+        <button
+          type="button"
+          class="group self-start cursor-pointer"
+          aria-label=<%= maybe_heex_attr_gettext.("close", @gettext) %>
+          data-action="css#toggle"
+        >
           <.icon name="hero-x-mark" class="size-5 opacity-40 group-hover:opacity-70" />
         </button>
       </div>
