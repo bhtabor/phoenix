@@ -85,6 +85,10 @@ defmodule Phx.New.Single do
      "phx_assets/turbo/turbo_stream_channel_source.js": "assets/js/turbo/turbo_stream_channel_source.js",
      "phx_assets/turbo/index.js": "assets/js/turbo/index.js",
      "phx_assets/turbo.js": "assets/vendor/turbo.js",
+     "phx_assets/controllers/core/css_controller.js": "assets/js/controllers/core/css_controller.js",
+     "phx_assets/controllers/application.js": "assets/js/controllers/application.js",
+     "phx_assets/controllers/index.js": "assets/js/controllers/index.js",
+     "phx_assets/stimulus.js": "assets/vendor/stimulus.js",
      "phx_assets/topbar.js": "assets/vendor/topbar.js"}
   ])
 
