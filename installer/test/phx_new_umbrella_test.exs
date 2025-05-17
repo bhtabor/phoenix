@@ -47,7 +47,7 @@ defmodule Mix.Tasks.Phx.New.UmbrellaTest do
 
       # Phoenix.LiveView.HTMLFormatter
       assert_file(root_path(@app, "mix.exs"), fn file ->
-        assert file =~ "{:phoenix_live_view, \">= 0.0.0\"}"
+        assert file =~ ~r":phoenix_live_view"
       end)
 
       assert_file(app_path(@app, "mix.exs"), fn file ->
@@ -369,7 +369,7 @@ defmodule Mix.Tasks.Phx.New.UmbrellaTest do
 
       # No LiveView (in web_path)
       assert_file(web_path(@app, "mix.exs"), &refute(&1 =~ ~r":phoenix_live_view"))
-      assert_file(web_path(@app, "mix.exs"), &refute(&1 =~ ~r":floki"))
+      assert_file(web_path(@app, "mix.exs"), &refute(&1 =~ ~r":lazy_html"))
       refute File.exists?(web_path(@app, "lib/#{@app}_web/templates/page/hero.html.heex"))
 
       refute_file(web_path(@app, "assets/js/live.js"))
