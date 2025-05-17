@@ -217,7 +217,7 @@ defmodule Mix.Tasks.Phx.NewTest do
 
       assert_file("phx_blog/mix.exs", fn file ->
         assert file =~ ~r":phoenix_live_view"
-        assert file =~ ~r":floki"
+        assert file =~ ~r":lazy_html"
       end)
 
       assert_file(
