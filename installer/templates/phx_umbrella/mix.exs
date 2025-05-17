@@ -28,7 +28,7 @@ defmodule <%= @root_app_module %>.MixProject do
     [
       <%= if @dev or @phoenix_version.pre != [] do %><%= @phoenix_dep_umbrella_root %>,
       <% end %># Required to run "mix format" on ~H/.heex files from the umbrella root
-      {:phoenix_live_view, ">= 0.0.0"}
+      {:phoenix_live_view, github: "phoenixframework/phoenix_live_view", override: true}
     ]<% else %>
     []<% end %>
   end
