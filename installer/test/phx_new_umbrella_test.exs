@@ -455,7 +455,7 @@ defmodule Mix.Tasks.Phx.New.UmbrellaTest do
         assert file =~ ~s|// import {Socket} from "phoenix"|
         assert file =~ ~s|// import {LiveSocket} from "phoenix_live_view"|
         assert file =~ ~s|// import topbar from "../vendor/topbar"|
-        assert file =~ ~s|// liveSocket.connect()|
+        assert file =~ ~s|//   liveSocket.connect()|
       end)
     end)
   end
