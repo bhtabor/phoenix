@@ -26,26 +26,28 @@ import "./turbo"
 <%= @live_comment %>import {hooks as colocatedHooks} from "phoenix-colocated/<%= @web_app_name %>"
 <%= @live_comment %>import topbar from "../vendor/topbar"
 
-<%= @live_comment %>const csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
-<%= @live_comment %>const liveSocket = new LiveSocket("/live", Socket, {
-<%= @live_comment %>  longPollFallbackMs: 2500,
-<%= @live_comment %>  params: {_csrf_token: csrfToken},
-<%= @live_comment %>  hooks: {...colocatedHooks},
-<%= @live_comment %>})
-
 // Show progress bar on live navigation and form submits
 <%= @live_comment %>topbar.config({barColors: {0: "#29d"}, shadowColor: "rgba(0, 0, 0, .3)"})
 <%= @live_comment %>window.addEventListener("phx:page-loading-start", _info => topbar.show(300))
 <%= @live_comment %>window.addEventListener("phx:page-loading-stop", _info => topbar.hide())
 
+<%= @live_comment %>document.addEventListener("turbo:load", () => {
+<%= @live_comment %>  const csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
+<%= @live_comment %>  const liveSocket = new LiveSocket("/live", Socket, {
+<%= @live_comment %>    longPollFallbackMs: 2500,
+<%= @live_comment %>    params: {_csrf_token: csrfToken},
+<%= @live_comment %>    hooks: {...colocatedHooks},
+<%= @live_comment %>  })
+
 // connect if there are any LiveViews on the page
-<%= @live_comment %>liveSocket.connect()
+<%= @live_comment %>  liveSocket.connect()
 
 // expose liveSocket on window for web console debug logs and latency simulation:
 // >> liveSocket.enableDebug()
 // >> liveSocket.enableLatencySim(1000)  // enabled for duration of browser session
 // >> liveSocket.disableLatencySim()
-<%= @live_comment %>window.liveSocket = liveSocket
+<%= @live_comment %>  window.liveSocket = liveSocket
+<%= @live_comment %>})
 
 // The lines below enable quality of life phoenix_live_reload
 // development features:
