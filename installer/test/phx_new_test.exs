@@ -222,7 +222,7 @@ defmodule Mix.Tasks.Phx.NewTest do
 
       assert_file("phx_blog/assets/js/app.js", fn file ->
         assert file =~ ~s|import {LiveSocket} from "phoenix_live_view"|
-        assert file =~ ~s|liveSocket.connect()|
+        assert file =~ ~s|  liveSocket.connect()|
       end)
 
       assert_file("phx_blog/mix.exs", fn file ->
