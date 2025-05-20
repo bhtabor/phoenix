@@ -59,7 +59,10 @@ defmodule Phx.New.Single do
      "phx_web/components/layouts/root.html.heex":
        "lib/:lib_web_name/components/layouts/root.html.heex",
      "phx_web/components/layouts.ex": "lib/:lib_web_name/components/layouts.ex"},
-    {:eex, :web, "phx_assets/logo.svg": "priv/static/images/logo.svg"}
+    {:eex, :web, "phx_assets/logo.svg": "priv/static/images/logo.svg"},
+    {:text, :web,
+     "phx_priv/templates/phx.gen.html/controller.ex": "priv/templates/phx.gen.html/controller.ex",
+     "phx_priv/templates/phx.gen.html/controller_test.exs": "priv/templates/phx.gen.html/controller_test.exs"}
   ])
 
   template(:ecto, [

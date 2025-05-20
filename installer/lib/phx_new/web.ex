@@ -59,7 +59,10 @@ defmodule Phx.New.Web do
      "phx_test/controllers/error_html_test.exs": "test/:web_app/controllers/error_html_test.exs",
      "phx_assets/topbar.js": "assets/vendor/topbar.js",
      "phx_web/components/layouts/root.html.heex": "lib/:web_app/components/layouts/root.html.heex"},
-    {:eex, :web, "phx_assets/logo.svg": "priv/static/images/logo.svg"}
+    {:eex, :web, "phx_assets/logo.svg": "priv/static/images/logo.svg"},
+    {:text, :web,
+     "phx_priv/templates/phx.gen.html/controller.ex": "priv/templates/phx.gen.html/controller.ex",
+     "phx_priv/templates/phx.gen.html/controller_test.exs": "priv/templates/phx.gen.html/controller_test.exs"}
   ])
 
   def prepare_project(%Project{app: app} = project) when not is_nil(app) do
