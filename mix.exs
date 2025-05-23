@@ -3,7 +3,7 @@ defmodule Phoenix.MixProject do
 
   if Mix.env() != :prod do
     for path <- :code.get_path(),
-        Regex.match?(~r/phx_new-[\w\.\-]+\/ebin$/, List.to_string(path)) do
+        Regex.match?(~r/phx_new_turbo-[\w\.\-]+\/ebin$/, List.to_string(path)) do
       Code.delete_path(path)
     end
   end
@@ -106,7 +106,7 @@ defmodule Phoenix.MixProject do
       {:makeup_syntect, "~> 0.1.0", only: :docs},
       # Test dependencies
       {:phoenix_html, "~> 4.0", only: [:docs, :test]},
-      {:phx_new, path: "./installer", only: [:docs, :test]},
+      {:phx_new_turbo, path: "./installer", only: [:docs, :test]},
       {:mint, "~> 1.4", only: :test},
       {:mint_web_socket, "~> 1.0.0", only: :test},
 
@@ -268,7 +268,7 @@ defmodule Phoenix.MixProject do
   defp raise_on_archive_build(_) do
     Mix.raise("""
     You are trying to install "phoenix" as an archive, which is not supported. \
-    You probably meant to install "phx_new" instead
+    You probably meant to install "phx_new_turbo" instead
     """)
   end
 
