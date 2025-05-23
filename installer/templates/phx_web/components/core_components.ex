@@ -251,7 +251,7 @@ defmodule <%= @web_namespace %>.CoreComponents do
           type={@type}
           name={@name}
           id={@id}
-          value={Phoenix.HTML.Form.normalize_value(@type, @value)}
+          value={if @type != "file", do: Phoenix.HTML.Form.normalize_value(@type, @value)}
           class={[
             @class || "w-full input",
             @errors != [] && (@error_class || "input-error")
@@ -374,12 +374,13 @@ defmodule <%= @web_namespace %>.CoreComponents do
   """
   slot :item, required: true do
     attr :title, :string, required: true
+    attr :class, :string
   end
 
   def list(assigns) do
     ~H"""
     <ul class="list">
-      <li :for={item <- @item} class="list-row">
+      <li :for={item <- @item} class={Map.get(item, :class, "list-row")}>
         <div>
           <div class="font-bold">{item.title}</div>
           <div>{render_slot(item)}</div>
