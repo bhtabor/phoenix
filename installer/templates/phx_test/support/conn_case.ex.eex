@@ -39,4 +39,19 @@ defmodule <%= @web_namespace %>.ConnCase do
   setup _tags do
     {:ok, conn: Phoenix.ConnTest.build_conn()}
   end<% end %>
+
+  @doc """
+  Asserts the given status code, that we have a turbo stream response and
+  returns the response body if one was set or sent.
+
+  ## Examples
+
+      assert turbo_stream_response(conn, 200) =~ "<turbo_stream>"
+  """
+  @spec turbo_stream_response(Plug.Conn.t(), status :: integer | atom) :: String.t()
+  def turbo_stream_response(conn, status) do
+    body = Phoenix.ConnTest.response(conn, status)
+    _ = Phoenix.ConnTest.response_content_type(conn, :turbo_stream)
+    body
+  end
 end
