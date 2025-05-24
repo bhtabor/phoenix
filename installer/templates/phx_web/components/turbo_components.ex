@@ -2,6 +2,7 @@ defmodule <%= @web_namespace %>.TurboComponents do
   use Phoenix.Component
 
   attr :id, :string, required: true
+  attr :refresh, :string, values: ["morph"]
   attr :src, :string
   attr :loading, :string, values: ["eager", "lazy"]
   attr :disabled, :boolean
@@ -27,13 +28,18 @@ defmodule <%= @web_namespace %>.TurboComponents do
     values: ["append", "prepend", "replace", "update", "remove", "before", "after", "refresh"],
     required: true
 
-  attr :method, :string, default: nil
+  attr :method, :string, values: ["morph"]
   attr :request_id, :string
   attr :target, :string
   attr :targets, :string
   slot :inner_block
 
   def turbo_stream(assigns) do
+    assigns =
+      assigns
+      |> assign_new(:method, fn -> nil end)
+      |> assign_new(:request_id, fn -> nil end)
+
     extra = assigns_to_attributes(assigns, [:action, :method, :request_id])
     assigns = assign(assigns, :extra, extra)
 

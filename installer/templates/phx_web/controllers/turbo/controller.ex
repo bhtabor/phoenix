@@ -4,9 +4,7 @@ defmodule <%= @web_namespace %>.Turbo.Controller do
   def broadcast_turbo_stream_refresh(conn, topic, opts \\ []) do
     request_id = if Keyword.get(opts, :debounced, true), do: get_turbo_request_id(conn), else: nil
 
-    broadcast_turbo_stream(topic, <%= @web_namespace %>.Turbo.Stream, "refresh", %{
-      request_id: request_id
-    })
+    broadcast_turbo_stream(topic, <%= @web_namespace %>.Turbo.Stream, "refresh", request_id: request_id)
   end
 
   def broadcast_turbo_stream(topic, module, template, assign) do
