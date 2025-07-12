@@ -36,7 +36,7 @@ defmodule Phx.New.MixProject do
         ],
         licenses: ["MIT"],
         links: %{"GitHub" => @scm_url},
-        files: ~w(lib templates mix.exs README.md)
+        files: ~w(lib priv templates mix.exs README.md)
       ],
       source_url: @scm_url,
       docs: docs(),
@@ -76,6 +76,7 @@ defmodule Phx.New.MixProject do
     [
       "hex.publish": [
         &copy_agents_md/1,
+        &copy_phoenix_templates/1,
         "hex.publish"
       ]
     ]
@@ -85,6 +86,13 @@ defmodule Phx.New.MixProject do
     File.cp_r!(
       Path.expand("../usage-rules", __DIR__),
       Path.expand("./templates/phoenix-usage-rules", __DIR__)
+    )
+  end
+
+  defp copy_phoenix_templates(_) do
+    File.cp_r!(
+      Path.expand("../priv/templates/phx.gen.html", __DIR__),
+      Path.expand("./priv/templates/phoenix/phx.gen.html", __DIR__)
     )
   end
 end
