@@ -66,6 +66,14 @@ defmodule Phx.New.Generator do
     end
   end
 
+  def copy_gen_templates(generator, template_root) do
+    source_dir = Path.join([@phoenix, "../priv/templates", generator])
+    destination_dir = Path.join([template_root, "priv/templates", generator])
+
+    Mix.shell().info([:green, "* copying #{generator} templates", :reset])
+    File.cp_r!(source_dir, destination_dir)
+  end
+
   def copy_from(%Project{} = project, mod, name) when is_atom(name) do
     mapping = mod.template_files(name)
 
