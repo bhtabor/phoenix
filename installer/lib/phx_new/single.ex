@@ -59,7 +59,8 @@ defmodule Phx.New.Single do
        "lib/:lib_web_name/components/layouts/root.html.heex",
      "phx_web/components/layouts.ex.eex": "lib/:lib_web_name/components/layouts.ex"},
     {:eex, :web, "phx_assets/logo.svg.eex": "priv/static/images/logo.svg"},
-    {:keep, :app, "priv/templates/phoenix/phx.gen.html": "priv/templates/phx.gen.html"}
+    {:keep, :app, "priv/templates/phoenix/phx.gen.html": "priv/templates/phx.gen.html"},
+    {:keep, :app, "priv/templates/phoenix/phx.gen.auth": "priv/templates/phx.gen.auth"}
   ])
 
   template(:ecto, [
@@ -164,6 +165,7 @@ defmodule Phx.New.Single do
   def gen_html(project) do
     copy_from(project, __MODULE__, :html)
     copy_phoenix_templates_to(project, "phx.gen.html")
+    copy_phoenix_templates_to(project, "phx.gen.auth")
   end
 
   def gen_gettext(project) do
