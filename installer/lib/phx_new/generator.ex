@@ -66,6 +66,18 @@ defmodule Phx.New.Generator do
     end
   end
 
+ def copy_phoenix_templates_to(%Project{} = project, generator) do
+    parent_templates = Path.join([@phoenix, "../priv/templates", generator])
+    # those are copied before publishing to Hex
+    published_templates = Application.app_dir(:phx_new, "priv/templates/phoenix/#{generator}")
+
+    source_dir = if(File.exists?(parent_templates), do: parent_templates, else: published_templates)
+    destination_dir = Path.join([project.web_path, "priv/templates", generator])
+
+    Mix.shell().info([:green, "* copying #{generator} templates", :reset])
+    File.cp_r!(source_dir, destination_dir)
+  end
+
   def copy_from(%Project{} = project, mod, name) when is_atom(name) do
     mapping = mod.template_files(name)
 
