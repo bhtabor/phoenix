@@ -59,7 +59,8 @@ defmodule Phx.New.Web do
      "phx_assets/topbar.js.eex": "assets/vendor/topbar.js",
      "phx_web/components/layouts/root.html.heex.eex": "lib/:web_app/components/layouts/root.html.heex"},
     {:eex, :web, "phx_assets/logo.svg.eex": "priv/static/images/logo.svg"},
-    {:keep, :web, "priv/templates/phoenix/phx.gen.html": "priv/templates/phx.gen.html"}
+    {:keep, :web, "priv/templates/phoenix/phx.gen.html": "priv/templates/phx.gen.html"},
+    {:keep, :web, "priv/templates/phoenix/phx.gen.auth": "priv/templates/phx.gen.auth"}
   ])
 
   def prepare_project(%Project{app: app} = project) when not is_nil(app) do
@@ -91,6 +92,7 @@ defmodule Phx.New.Web do
   defp gen_html(%Project{} = project) do
     copy_from(project, __MODULE__, :html)
     copy_phoenix_templates_to(project, "phx.gen.html")
+    copy_phoenix_templates_to(project, "phx.gen.auth")
   end
 
   defp gen_gettext(%Project{} = project) do

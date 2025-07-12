@@ -90,9 +90,11 @@ defmodule Phx.New.MixProject do
   end
 
   defp copy_phoenix_templates(_) do
-    File.cp_r!(
-      Path.expand("../priv/templates/phx.gen.html", __DIR__),
-      Path.expand("./priv/templates/phoenix/phx.gen.html", __DIR__)
-    )
+    for generator <- ["phx.gen.html", "phx.gen.auth"] do
+      File.cp_r!(
+        Path.expand("../priv/templates/#{generator}", __DIR__),
+        Path.expand("./priv/templates/phoenix/#{generator}", __DIR__)
+      )
+    end
   end
 end
