@@ -58,7 +58,8 @@ defmodule Phx.New.Single do
      "phx_web/components/layouts/root.html.heex":
        "lib/:lib_web_name/components/layouts/root.html.heex",
      "phx_web/components/layouts.ex": "lib/:lib_web_name/components/layouts.ex"},
-    {:eex, :web, "phx_assets/logo.svg": "priv/static/images/logo.svg"}
+    {:eex, :web, "phx_assets/logo.svg": "priv/static/images/logo.svg"},
+    {:keep, :app, "priv/templates/phx.gen.html": "priv/templates/phx.gen.html"}
   ])
 
   template(:ecto, [
@@ -160,6 +161,7 @@ defmodule Phx.New.Single do
 
   def gen_html(project) do
     copy_from(project, __MODULE__, :html)
+    copy_gen_templates("phx.gen.html", project.web_path)
   end
 
   def gen_gettext(project) do
