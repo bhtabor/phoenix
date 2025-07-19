@@ -7,7 +7,7 @@ defmodule Phx.New.MixProject do
   use Mix.Project
 
   @version "1.8.2"
-  @scm_url "https://github.com/phoenixframework/phoenix"
+  @scm_url "https://github.com/bhtabor/phoenix"
 
   # If the elixir requirement is updated, we need to update:
   #
@@ -28,11 +28,9 @@ defmodule Phx.New.MixProject do
       deps: deps(),
       aliases: aliases(),
       package: [
+        name: "phx_new_turbo",
         maintainers: [
-          "Chris McCord",
-          "José Valim",
-          "Gary Rennie",
-          "Jason Stiebs"
+          "Biruk H. Tabor",
         ],
         licenses: ["MIT"],
         links: %{"GitHub" => @scm_url},
@@ -45,7 +43,7 @@ defmodule Phx.New.MixProject do
       Phoenix framework project generator.
 
       Provides a `mix phx.new` task to bootstrap a new Elixir application
-      with Phoenix dependencies.
+      with Phoenix and Turbo dependencies.
       """
     ]
   end
@@ -68,7 +66,7 @@ defmodule Phx.New.MixProject do
 
   defp docs do
     [
-      source_url_pattern: "#{@scm_url}/blob/v#{@version}/installer/%{path}#L%{line}"
+      source_url_pattern: "#{@scm_url}/blob/turbo/phx-v#{@version}/installer/%{path}#L%{line}"
     ]
   end
 
