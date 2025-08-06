@@ -67,7 +67,7 @@ defmodule Phx.New.Generator do
   end
 
   def copy_gen_templates(generator, template_root) do
-    source_dir = Path.join([Path.expand("../../..", __DIR__), "priv", "templates", generator])
+    source_dir = Path.expand("../../../priv/templates/#{generator}", __DIR__)
     destination_dir = Path.join([template_root, "priv", "templates", generator])
 
     Mix.shell().info([:green, "* copying #{generator} templates", :reset])
