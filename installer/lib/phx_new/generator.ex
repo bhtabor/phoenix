@@ -163,6 +163,12 @@ defmodule Phx.New.Generator do
               @rules_files["html.md"],
               "\n<!-- phoenix:html-end -->"
             ],
+          project.binding[:html] &&
+            [
+              "<!-- phoenix:turbo-start -->\n",
+              @rules_files["turbo.md"],
+              "\n<!-- phoenix:turbo-end -->"
+            ],
           project.binding[:live] &&
             [
               "<!-- phoenix:liveview-start -->\n",
