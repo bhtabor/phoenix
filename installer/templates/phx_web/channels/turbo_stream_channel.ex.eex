@@ -3,7 +3,9 @@ defmodule <%= @web_namespace %>.TurboStreamChannel do
 
   @impl true
   def join(topic, %{"signed_topic" => signed_topic}, socket) do
-    case <%= @web_namespace %>.Token.verify(socket, signed_topic) do
+    # Signed stream topics do not expire: a long-lived page must be able
+    # to resubscribe after a disconnect.
+    case <%= @web_namespace %>.Token.verify(socket, :turbo_stream_topic, signed_topic, max_age: :infinity) do
       {:ok, ^topic} ->
         {:ok, socket}
 

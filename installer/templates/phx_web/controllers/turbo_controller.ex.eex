@@ -1,27 +1,113 @@
 defmodule <%= @web_namespace %>.TurboController do
-  import Plug.Conn, only: [assign: 3, get_req_header: 2]
+  import Plug.Conn, only: [assign: 3, get_req_header: 2, get_resp_header: 2, put_resp_header: 3]
 
+  @doc """
+  Plug for the browser pipeline: assigns the Turbo request signals and
+  declares that responses vary on the `Turbo-Frame` header.
+
+  Responses on this pipeline may differ for frame requests (e.g. a
+  partial for a frame navigation vs. the full page), so an HTTP cache
+  must key on the header — otherwise it could serve the frame variant
+  to a full-page navigation or vice versa.
+  """
   def fetch_turbo_headers(conn, _opts \\ []) do
     conn
     |> assign(:turbo_frame, get_request_header(conn, "turbo-frame"))
     |> assign(:turbo_request_id, get_request_header(conn, "x-turbo-request-id"))
+    |> append_vary("turbo-frame")
   end
 
+  @doc """
+  Broadcasts a Turbo 8 page refresh to all subscribers of `topic`.
+
+  The refresh is tagged with the current request's `X-Turbo-Request-ID`
+  (or `opts[:turbo_request_id]`) so Turbo skips it on the client that
+  caused the change — that client already got its response.
+  """
   def broadcast_turbo_stream_refresh(conn, topic, opts \\ []) do
-    request_id = Keyword.get(opts, :turbo_request_id, conn.assigns.turbo_request_id)
-    broadcast_turbo_stream(topic, <%= @web_namespace %>.PageTURBO_STREAM, "refresh", request_id: request_id)
+    request_id = Keyword.get(opts, :turbo_request_id, conn.assigns[:turbo_request_id])
+    broadcast_turbo_stream_action(topic, "refresh", request_id: request_id)
   end
 
-  def broadcast_turbo_stream(topic, module, template, assign) do
+  @doc """
+  Broadcasts any Turbo Stream action to all subscribers of `topic`.
+
+  Accepts the same options as
+  `<%= @web_namespace %>.TurboComponents.turbo_stream_tag/2` — built-in
+  actions are validated, custom actions pass through:
+
+      broadcast_turbo_stream_action(topic, "remove", target: "post-1")
+      broadcast_turbo_stream_action(topic, "append",
+        target: "notifications",
+        template: Phoenix.Template.render_to_string(module, template, "html", assigns)
+      )
+  """
+  def broadcast_turbo_stream_action(topic, action, opts \\ []) do
+    broadcast_turbo_stream_content(
+      topic,
+      <%= @web_namespace %>.TurboComponents.turbo_stream_tag(action, opts)
+    )
+  end
+
+  @doc """
+  Renders a turbo_stream template and broadcasts it to all subscribers
+  of `topic`. Use this to compose multi-action payloads in HEEx:
+
+      broadcast_turbo_stream_render(topic, <%= @web_namespace %>.OrderTURBO_STREAM, "shipped",
+        order: order
+      )
+  """
+  def broadcast_turbo_stream_render(topic, module, template, assigns) do
     stream =
       Phoenix.Template.render_to_string(
         module,
         template,
         "turbo_stream",
-        assign
+        assigns
       )
 
-    <%= @web_namespace %>.Endpoint.broadcast(topic, "message", %{data: stream})
+    broadcast_turbo_stream_content(topic, stream)
+  end
+
+  @doc """
+  Broadcasts already-built `<turbo-stream>` markup to all subscribers
+  of `topic`.
+  """
+  def broadcast_turbo_stream_content(topic, content) do
+    <%= @web_namespace %>.Endpoint.broadcast(topic, "message", %{data: content})
+  end
+
+  @doc """
+  Adds `value` to the response's `vary` header (idempotent).
+
+  Useful as a plug in pipelines whose responses are negotiated from a
+  request header — e.g. a pipeline that accepts turbo streams:
+
+      pipeline :browser do
+        plug :accepts, ["html", "turbo_stream"]
+        plug :append_vary, "accept"
+        plug :fetch_turbo_headers
+        ...
+  """
+  def append_vary(conn, value) do
+    case get_resp_header(conn, "vary") do
+      [] ->
+        put_resp_header(conn, "vary", value)
+
+      existing ->
+        joined = Enum.join(existing, ", ")
+
+        tokens =
+          joined
+          |> String.split(",")
+          |> Enum.map(&(&1 |> String.trim() |> String.downcase()))
+
+        if String.downcase(value) in tokens do
+          conn
+        else
+          put_resp_header(conn, "vary", joined <> ", " <> value)
+        end
+    end
   end
 
   defp get_request_header(conn, header) do

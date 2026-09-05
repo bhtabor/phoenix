@@ -1,16 +1,22 @@
 defmodule <%= @web_namespace %>.Token do
-  @salt "phoenix token"
-  @max_age 86400
+  @moduledoc """
+  Signing and verification for data exposed to clients.
 
-  def sign(context, data) do
-    Phoenix.Token.sign(context, @salt, data)
+  Each kind of token gets its own purpose, which scopes the salt — a
+  token signed for one purpose cannot be verified for another.
+
+  `verify/4` accepts the same options as `Phoenix.Token.verify/4`;
+  unless `:max_age` is given, tokens expire after the `Phoenix.Token`
+  default of one day (86400 seconds).
+  """
+
+  def sign(context, purpose, data) do
+    Phoenix.Token.sign(context, salt(purpose), data)
   end
 
-  def verify(context, token) do
-    verify(context, token, @max_age)
+  def verify(context, purpose, token, opts \\ []) do
+    Phoenix.Token.verify(context, salt(purpose), token, opts)
   end
 
-  def verify(context, token, max_age) do
-    Phoenix.Token.verify(context, @salt, token, max_age: max_age)
-  end
+  defp salt(purpose), do: "token:" <> to_string(purpose)
 end
