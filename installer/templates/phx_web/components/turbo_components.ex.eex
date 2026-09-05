@@ -1,6 +1,9 @@
 defmodule <%= @web_namespace %>.TurboComponents do
   use Phoenix.Component
 
+  # Actions that never carry a <template> element.
+  @templateless_stream_actions ["remove", "refresh"]
+
   attr :id, :string, required: true
   attr :refresh, :string, values: ["morph"]
   attr :src, :string
@@ -24,6 +27,20 @@ defmodule <%= @web_namespace %>.TurboComponents do
     """
   end
 
+  @doc """
+  Renders one `<turbo-stream>` element for the built-in Turbo Stream
+  actions. Attribute combinations follow the action: `method` is only
+  emitted for `replace`/`update`, `request-id` only for `refresh`.
+
+      <.turbo_stream action="update" target="notifications">
+        {render_slot(@inner_block)}
+      </.turbo_stream>
+
+      <.turbo_stream action="refresh" request_id={@request_id} />
+
+  For custom actions (registered client-side via `Turbo.StreamActions`),
+  use `turbo_stream_tag/2`.
+  """
   attr :action, :string,
     values: ["append", "prepend", "replace", "update", "remove", "before", "after", "refresh"],
     required: true
@@ -57,6 +74,54 @@ defmodule <%= @web_namespace %>.TurboComponents do
     """
   end
 
+  @doc """
+  Builds a `<turbo-stream>` element as an HTML string, for any action —
+  built-in or custom — and for use outside of templates, e.g. broadcast
+  payloads sent over the `TurboStreamChannel`:
+
+      turbo_stream_tag("refresh", request_id: request_id)
+      turbo_stream_tag("append", target: "notifications", template: html)
+      turbo_stream_tag("highlight", target: "item-7")
+
+  The permissive generic: no per-action rules are enforced. `remove`
+  and `refresh` never carry a `<template>` (`:template` passed for them
+  is ignored); every other action always carries one, even when empty.
+  When both `:target` and `:targets` are given, `:target` wins.
+
+  The `:template` option is interpolated verbatim — it must be trusted
+  HTML (e.g. the output of `Phoenix.Template.render_to_string/4`);
+  attribute values are escaped automatically.
+  """
+  def turbo_stream_tag(action, opts \\ []) do
+    action = to_string(action)
+
+    selector =
+      cond do
+        target = Keyword.get(opts, :target) -> [target: target]
+        targets = Keyword.get(opts, :targets) -> [targets: targets]
+        true -> []
+      end
+
+    attrs =
+      [action: action] ++
+        selector ++
+        [method: Keyword.get(opts, :method), "request-id": Keyword.get(opts, :request_id)]
+
+    rendered_attrs =
+      attrs
+      |> Enum.reject(fn {_key, value} -> is_nil(value) end)
+      |> Enum.map(fn {key, value} -> [" ", to_string(key), ~s(="), escape_attr(value), ~s(")] end)
+
+    content =
+      if action in @templateless_stream_actions do
+        []
+      else
+        ["<template>", Keyword.get(opts, :template) || "", "</template>"]
+      end
+
+    IO.iodata_to_binary(["<turbo-stream", rendered_attrs, ">", content, "</turbo-stream>"])
+  end
+
   attr :topic, :string, required: true
 
   def turbo_stream_channel_source(assigns) do
@@ -65,7 +130,11 @@ defmodule <%= @web_namespace %>.TurboComponents do
     """
   end
 
+  defp escape_attr(value) do
+    value |> to_string() |> Phoenix.HTML.html_escape() |> Phoenix.HTML.safe_to_string()
+  end
+
   defp signed_topic(topic) do
-    <%= @web_namespace %>.Token.sign(<%= @web_namespace %>.Endpoint, topic)
+    <%= @web_namespace %>.Token.sign(<%= @web_namespace %>.Endpoint, :turbo_stream_topic, topic)
   end
 end

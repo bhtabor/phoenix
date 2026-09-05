@@ -3,6 +3,11 @@ defmodule <%= @web_namespace %>.Router do
 
   pipeline :browser do
     plug :accepts, ["html"]
+    # To serve Turbo Stream HTTP responses, accept the format ("html" first,
+    # so clients without an Accept header stay on HTML) and vary on it:
+    #
+    # plug :accepts, ["html", "turbo_stream"]
+    # plug :append_vary, "accept"
     plug :fetch_turbo_headers
     plug :fetch_session
     plug :fetch_live_flash
