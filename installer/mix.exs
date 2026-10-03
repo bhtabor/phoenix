@@ -33,7 +33,7 @@ defmodule Phx.New.MixProject do
       package: [
         name: "phx_new_turbo",
         maintainers: [
-          "Biruk H. Tabor",
+          "Biruk H. Tabor"
         ],
         licenses: ["MIT"],
         links: %{"GitHub" => @scm_url},
@@ -78,6 +78,7 @@ defmodule Phx.New.MixProject do
       "hex.publish": [
         &copy_agents_md/1,
         &copy_phoenix_templates/1,
+        &copy_phoenix_turbo_rules/1,
         "hex.publish"
       ]
     ]
@@ -97,5 +98,16 @@ defmodule Phx.New.MixProject do
         Path.expand("./priv/templates/phoenix/#{generator}", __DIR__)
       )
     end
+  end
+
+  defp copy_phoenix_turbo_rules(_) do
+    destination = Path.expand("./priv/packages/phoenix_turbo_rules", __DIR__)
+
+    File.mkdir_p!(Path.dirname(destination))
+
+    File.cp_r!(
+      Path.expand("../packages/phoenix_turbo_rules", __DIR__),
+      destination
+    )
   end
 end
