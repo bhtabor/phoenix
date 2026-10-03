@@ -151,8 +151,19 @@ defmodule Mix.Tasks.Phx.New.UmbrellaTest do
       assert_file(web_path(@app, "test/#{@app}_web/controllers/page_controller_test.exs"))
       assert_file(web_path(@app, "test/#{@app}_web/controllers/error_html_test.exs"))
       assert_file(web_path(@app, "test/#{@app}_web/controllers/error_json_test.exs"))
+      assert_file(web_path(@app, "test/#{@app}_web/turbo_stream_test.exs"))
       assert_file(web_path(@app, "test/support/conn_case.ex"))
       assert_file(web_path(@app, "test/test_helper.exs"))
+
+      assert_file(
+        web_path(@app, "lib/#{@app}_web/turbo_stream.ex"),
+        ~r/defmodule PhxUmbWeb.TurboStream do/
+      )
+
+      assert_file(web_path(@app, "lib/#{@app}_web/controllers/turbo_controller.ex"), fn file ->
+        assert file =~ "TurboStream.broadcast("
+        refute file =~ ~s|Endpoint.broadcast(topic, "message"|
+      end)
 
       assert_file(
         web_path(@app, "lib/#{@app}_web/controllers/page_controller.ex"),
@@ -393,6 +404,8 @@ defmodule Mix.Tasks.Phx.New.UmbrellaTest do
       refute File.exists?(web_path(@app, "lib/#{@app}_web/controllers/page_html.ex"))
       refute File.exists?(web_path(@app, "lib/#{@app}_web/controllers/page_html"))
       refute File.exists?(web_path(@app, "lib/#{@app}_web/components"))
+      refute File.exists?(web_path(@app, "lib/#{@app}_web/turbo_stream.ex"))
+      refute File.exists?(web_path(@app, "test/#{@app}_web/turbo_stream_test.exs"))
 
       assert_file(web_path(@app, "mix.exs"), &refute(&1 =~ ~r":phoenix_html"))
       assert_file(web_path(@app, "mix.exs"), &refute(&1 =~ ~r":phoenix_live_reload"))

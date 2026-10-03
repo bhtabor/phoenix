@@ -1,0 +1,30 @@
+defmodule <%= @web_namespace %>.TurboStream do
+  @moduledoc """
+  Sends Turbo Streams to the `<turbo-stream-channel-source>` elements rendered
+  in a page.
+
+  Each element joins its topic through `TurboStreamChannel` and renders every
+  stream it receives. This module owns the wire contract between the server and
+  those elements — the `"message"` event carrying the markup under `:data` — so
+  nothing else in the app has to know it.
+
+  Build the markup with `TurboComponents.turbo_stream_tag/2` or a
+  `turbo_stream` template, then send it with `broadcast/2`.
+  """
+
+  @doc """
+  Broadcasts already-built `<turbo-stream>` markup to every subscriber of `topic`.
+
+  `topic` is the topic given to `.turbo_stream_channel_source/1`, which signs
+  it for `TurboStreamChannel` to verify on join:
+
+      <%= @web_namespace %>.TurboStream.broadcast("turbo_stream:" <> user.id, stream)
+
+  The message goes to every node in the PubSub cluster: a subscriber holds its
+  socket on one node, which is rarely the node handling the request that caused
+  the change.
+  """
+  def broadcast(topic, stream) when is_binary(topic) and is_binary(stream) do
+    <%= @web_namespace %>.Endpoint.broadcast(topic, "message", %{data: stream})
+  end
+end
