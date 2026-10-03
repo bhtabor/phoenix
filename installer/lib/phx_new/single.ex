@@ -44,17 +44,25 @@ defmodule Phx.New.Single do
      "phx_web/controllers/error_html.ex.eex": "lib/:lib_web_name/controllers/error_html.ex",
      "phx_test/controllers/error_html_test.exs.eex":
        "test/:lib_web_name/controllers/error_html_test.exs",
-     "phx_web/components/core_components.ex.eex": "lib/:lib_web_name/components/core_components.ex",
-     "phx_web/components/turbo_components.ex.eex": "lib/:lib_web_name/components/turbo_components.ex",
-     "phx_web/channels/turbo_stream_channel.ex.eex": "lib/:lib_web_name/channels/turbo_stream_channel.ex",
-     "phx_web/controllers/turbo_controller.ex.eex": "lib/:lib_web_name/controllers/turbo_controller.ex",
-     "phx_web/controllers/page_controller.ex.eex": "lib/:lib_web_name/controllers/page_controller.ex",
-     "phx_web/controllers/page_turbo_stream.ex.eex": "lib/:lib_web_name/controllers/page_turbo_stream.ex",
+     "phx_web/components/core_components.ex.eex":
+       "lib/:lib_web_name/components/core_components.ex",
+     "phx_web/components/turbo_components.ex.eex":
+       "lib/:lib_web_name/components/turbo_components.ex",
+     "phx_web/channels/turbo_stream_channel.ex.eex":
+       "lib/:lib_web_name/channels/turbo_stream_channel.ex",
+     "phx_web/turbo_stream.ex.eex": "lib/:lib_web_name/turbo_stream.ex",
+     "phx_web/controllers/turbo_controller.ex.eex":
+       "lib/:lib_web_name/controllers/turbo_controller.ex",
+     "phx_web/controllers/page_controller.ex.eex":
+       "lib/:lib_web_name/controllers/page_controller.ex",
+     "phx_web/controllers/page_turbo_stream.ex.eex":
+       "lib/:lib_web_name/controllers/page_turbo_stream.ex",
      "phx_web/controllers/page_html.ex.eex": "lib/:lib_web_name/controllers/page_html.ex",
      "phx_web/controllers/page_html/home.html.heex.eex":
        "lib/:lib_web_name/controllers/page_html/home.html.heex",
      "phx_test/controllers/page_controller_test.exs.eex":
        "test/:lib_web_name/controllers/page_controller_test.exs",
+     "phx_test/turbo_stream_test.exs.eex": "test/:lib_web_name/turbo_stream_test.exs",
      "phx_web/components/layouts/root.html.heex.eex":
        "lib/:lib_web_name/components/layouts/root.html.heex",
      "phx_web/components/layouts.ex.eex": "lib/:lib_web_name/components/layouts.ex"},
@@ -81,7 +89,8 @@ defmodule Phx.New.Single do
   template(:js, [
     {:eex, :web,
      "phx_assets/app.js.eex": "assets/js/app.js",
-     "phx_assets/turbo/turbo_stream_channel_source.js": "assets/js/turbo/turbo_stream_channel_source.js",
+     "phx_assets/turbo/turbo_stream_channel_source.js":
+       "assets/js/turbo/turbo_stream_channel_source.js",
      "phx_assets/turbo/index.js": "assets/js/turbo/index.js",
      "phx_assets/turbo.js": "assets/vendor/turbo.js",
      "phx_assets/topbar.js.eex": "assets/vendor/topbar.js",

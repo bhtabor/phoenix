@@ -1,0 +1,32 @@
+defmodule <%= @web_namespace %>.TurboStreamTest do
+  use ExUnit.Case, async: true
+
+  alias <%= @web_namespace %>.{Endpoint, TurboController, TurboStream}
+
+  setup do
+    # Subscribing to the endpoint's PubSub is enough: every subscriber of
+    # the topic gets the broadcast, no channel join required.
+    topic = "turbo_stream:test:#{inspect(self())}"
+    Phoenix.PubSub.subscribe(Endpoint.config(:pubsub_server), topic)
+    {:ok, topic: topic}
+  end
+
+  test "broadcast/2 delivers the markup as a message event", %{topic: topic} do
+    stream = ~s(<turbo-stream action="remove" target="post-1"></turbo-stream>)
+
+    assert :ok = TurboStream.broadcast(topic, stream)
+
+    assert_receive %Phoenix.Socket.Broadcast{
+      topic: ^topic,
+      event: "message",
+      payload: %{data: ^stream}
+    }
+  end
+
+  test "broadcast_turbo_stream_action/3 sends the action markup", %{topic: topic} do
+    assert :ok = TurboController.broadcast_turbo_stream_action(topic, "remove", target: "post-1")
+
+    assert_receive %Phoenix.Socket.Broadcast{event: "message", payload: %{data: data}}
+    assert data == ~s(<turbo-stream action="remove" target="post-1"></turbo-stream>)
+  end
+end

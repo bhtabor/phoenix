@@ -41,9 +41,12 @@ defmodule <%= @web_namespace %>.TurboController do
         target: "notifications",
         template: Phoenix.Template.render_to_string(module, template, "html", assigns)
       )
+
+  For markup that is already built, send it with
+  `<%= @web_namespace %>.TurboStream.broadcast/2`.
   """
   def broadcast_turbo_stream_action(topic, action, opts \\ []) do
-    broadcast_turbo_stream_content(
+    <%= @web_namespace %>.TurboStream.broadcast(
       topic,
       <%= @web_namespace %>.TurboComponents.turbo_stream_tag(action, opts)
     )
@@ -66,15 +69,7 @@ defmodule <%= @web_namespace %>.TurboController do
         assigns
       )
 
-    broadcast_turbo_stream_content(topic, stream)
-  end
-
-  @doc """
-  Broadcasts already-built `<turbo-stream>` markup to all subscribers
-  of `topic`.
-  """
-  def broadcast_turbo_stream_content(topic, content) do
-    <%= @web_namespace %>.Endpoint.broadcast(topic, "message", %{data: content})
+    <%= @web_namespace %>.TurboStream.broadcast(topic, stream)
   end
 
   @doc """

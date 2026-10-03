@@ -91,6 +91,7 @@ defmodule Mix.Tasks.Phx.NewTest do
       assert_file("phx_blog/test/phx_blog_web/controllers/page_controller_test.exs")
       assert_file("phx_blog/test/phx_blog_web/controllers/error_html_test.exs")
       assert_file("phx_blog/test/phx_blog_web/controllers/error_json_test.exs")
+      assert_file("phx_blog/test/phx_blog_web/turbo_stream_test.exs")
       assert_file("phx_blog/test/support/conn_case.ex")
       assert_file("phx_blog/test/test_helper.exs")
 
@@ -137,6 +138,17 @@ defmodule Mix.Tasks.Phx.NewTest do
 
       assert_file("phx_blog/lib/phx_blog_web/components/layouts/root.html.heex", fn file ->
         assert file =~ ~s|<meta name="csrf-token" content={get_csrf_token()} />|
+      end)
+
+      assert_file("phx_blog/lib/phx_blog_web/turbo_stream.ex", fn file ->
+        assert file =~ "defmodule PhxBlogWeb.TurboStream do"
+        assert file =~ "def broadcast(topic, stream)"
+        assert file =~ ~s|Endpoint.broadcast(topic, "message", %{data: stream})|
+      end)
+
+      assert_file("phx_blog/lib/phx_blog_web/controllers/turbo_controller.ex", fn file ->
+        assert file =~ "TurboStream.broadcast("
+        refute file =~ ~s|Endpoint.broadcast(topic, "message"|
       end)
 
       assert_file("phx_blog/lib/phx_blog_web/controllers/page_html/home.html.heex")
@@ -393,6 +405,8 @@ defmodule Mix.Tasks.Phx.NewTest do
       refute File.exists?("phx_blog/lib/phx_blog_web/controllers/page_html")
       refute File.exists?("phx_blog/lib/phx_blog_web/controllers/error_html.ex")
       refute File.exists?("phx_blog/lib/phx_blog_web/components")
+      refute File.exists?("phx_blog/lib/phx_blog_web/turbo_stream.ex")
+      refute File.exists?("phx_blog/test/phx_blog_web/turbo_stream_test.exs")
 
       assert_file("phx_blog/mix.exs", &refute(&1 =~ ~r":phoenix_html"))
       assert_file("phx_blog/mix.exs", &refute(&1 =~ ~r":phoenix_live_reload"))

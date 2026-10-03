@@ -29,7 +29,8 @@ defmodule Phx.New.Web do
      "#{@pre}/gitignore.eex": ".gitignore",
      "#{@pre}/test/test_helper.exs.eex": "test/test_helper.exs",
      "phx_test/support/conn_case.ex.eex": "test/support/conn_case.ex",
-     "phx_test/controllers/error_json_test.exs.eex": "test/:web_app/controllers/error_json_test.exs",
+     "phx_test/controllers/error_json_test.exs.eex":
+       "test/:web_app/controllers/error_json_test.exs",
      "#{@pre}/formatter.exs.eex": ".formatter.exs"}
   ])
 
@@ -45,19 +46,25 @@ defmodule Phx.New.Web do
      "phx_web/components/core_components.ex.eex": "lib/:web_app/components/core_components.ex",
      "phx_web/components/turbo_components.ex.eex": "lib/:web_app/components/turbo_components.ex",
      "phx_web/components/layouts.ex.eex": "lib/:web_app/components/layouts.ex",
-     "phx_web/channels/turbo_stream_channel.ex.eex": "lib/:web_app/channels/turbo_stream_channel.ex",
+     "phx_web/channels/turbo_stream_channel.ex.eex":
+       "lib/:web_app/channels/turbo_stream_channel.ex",
+     "phx_web/turbo_stream.ex.eex": "lib/:web_app/turbo_stream.ex",
      "phx_web/controllers/turbo_controller.ex.eex": "lib/:web_app/controllers/turbo_controller.ex",
      "phx_web/controllers/page_controller.ex.eex": "lib/:web_app/controllers/page_controller.ex",
-     "phx_web/controllers/page_turbo_stream.ex.eex": "lib/:web_app/controllers/page_turbo_stream.ex",
+     "phx_web/controllers/page_turbo_stream.ex.eex":
+       "lib/:web_app/controllers/page_turbo_stream.ex",
      "phx_web/controllers/error_html.ex.eex": "lib/:web_app/controllers/error_html.ex",
      "phx_web/controllers/page_html.ex.eex": "lib/:web_app/controllers/page_html.ex",
      "phx_web/controllers/page_html/home.html.heex.eex":
        "lib/:web_app/controllers/page_html/home.html.heex",
      "phx_test/controllers/page_controller_test.exs.eex":
        "test/:web_app/controllers/page_controller_test.exs",
-     "phx_test/controllers/error_html_test.exs.eex": "test/:web_app/controllers/error_html_test.exs",
+     "phx_test/turbo_stream_test.exs.eex": "test/:web_app/turbo_stream_test.exs",
+     "phx_test/controllers/error_html_test.exs.eex":
+       "test/:web_app/controllers/error_html_test.exs",
      "phx_assets/topbar.js.eex": "assets/vendor/topbar.js",
-     "phx_web/components/layouts/root.html.heex.eex": "lib/:web_app/components/layouts/root.html.heex"},
+     "phx_web/components/layouts/root.html.heex.eex":
+       "lib/:web_app/components/layouts/root.html.heex"},
     {:eex, :web, "phx_assets/logo.svg.eex": "priv/static/images/logo.svg"},
     {:keep, :web, "priv/templates/phoenix/phx.gen.html": "priv/templates/phx.gen.html"},
     {:keep, :web, "priv/templates/phoenix/phx.gen.auth": "priv/templates/phx.gen.auth"}
