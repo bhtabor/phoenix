@@ -34,7 +34,10 @@ defmodule <%= @root_app_module %>.MixProject do
     [
       <%= if @dev or @phoenix_version.pre != [] do %><%= @phoenix_dep_umbrella_root %>,
       <% end %># Required to run "mix format" on ~H/.heex files from the umbrella root
-      {:phoenix_live_view, ">= 0.0.0"}
+      {:phoenix_live_view, ">= 0.0.0"}<%= if @agents_md do %>,
+      # Ships the Turbo usage rules, so `mix usage_rules.sync` keeps them
+      {:phoenix_turbo_rules,
+       path: "deps_source/phoenix_turbo_rules", only: [:dev, :test], runtime: false}<% end %>
     ]<% else %>
     []<% end %>
   end

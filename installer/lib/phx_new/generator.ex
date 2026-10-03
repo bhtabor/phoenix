@@ -5,6 +5,7 @@ defmodule Phx.New.Generator do
 
   @phoenix Path.expand("../..", __DIR__)
   @phoenix_version Version.parse!(Mix.Project.config()[:version])
+  @phoenix_turbo_rules_dir "deps_source/phoenix_turbo_rules"
 
   @callback prepare_project(Project.t()) :: Project.t()
   @callback generate(Project.t()) :: Project.t()
@@ -66,12 +67,14 @@ defmodule Phx.New.Generator do
     end
   end
 
- def copy_phoenix_templates_to(%Project{} = project, generator) do
+  def copy_phoenix_templates_to(%Project{} = project, generator) do
     parent_templates = Path.join([@phoenix, "../priv/templates", generator])
     # those are copied before publishing to Hex
     published_templates = Application.app_dir(:phx_new, "priv/templates/phoenix/#{generator}")
 
-    source_dir = if(File.exists?(parent_templates), do: parent_templates, else: published_templates)
+    source_dir =
+      if(File.exists?(parent_templates), do: parent_templates, else: published_templates)
+
     destination_dir = Path.join([project.web_path, "priv/templates", generator])
 
     Mix.shell().info([:green, "* copying #{generator} templates", :reset])
@@ -110,14 +113,40 @@ defmodule Phx.New.Generator do
 
   parent_rules = Path.join(@phoenix, "../usage-rules")
   # those are copied before publishing to Hex
-  copied_rules = Path.expand("../../templates/phoenix-usage-rules", __DIR__)
+  published_rules = Path.expand("../../templates/phoenix-usage-rules", __DIR__)
 
-  @usage_rules_path if(File.exists?(parent_rules), do: parent_rules, else: copied_rules)
+  @usage_rules_path if(File.exists?(parent_rules), do: parent_rules, else: published_rules)
 
   @rules_files Map.new(File.ls!(@usage_rules_path), fn file ->
                  content = File.read!(Path.join(@usage_rules_path, file))
                  {file, String.trim_trailing(content)}
                end)
+
+  def copy_phoenix_turbo_rules_to(%Project{} = project) do
+    parent_phoenix_turbo_rules = Path.join([@phoenix, "../packages/phoenix_turbo_rules"])
+
+    published_phoenix_turbo_rules =
+      Application.app_dir(:phx_new, "priv/packages/phoenix_turbo_rules")
+
+    package_dir =
+      if File.exists?(parent_phoenix_turbo_rules),
+        do: parent_phoenix_turbo_rules,
+        else: published_phoenix_turbo_rules
+
+    destination_dir = Path.join([project.project_path, @phoenix_turbo_rules_dir])
+
+    Mix.shell().info([:green, "* copying Turbo usage rules", :reset])
+
+    File.mkdir_p!(destination_dir)
+
+    Enum.each(["mix.exs", "README.md"], fn file ->
+      File.cp!(Path.join(package_dir, file), Path.join(destination_dir, file))
+    end)
+
+    usage_rules_dir = Path.join(destination_dir, "usage-rules")
+    File.mkdir_p!(usage_rules_dir)
+    File.write!(Path.join(usage_rules_dir, "turbo.md"), @rules_files["turbo.md"] <> "\n")
+  end
 
   @new_project_rules_files Map.new(
                              File.ls!(Path.expand("../../templates/usage-rules", __DIR__)),
@@ -130,6 +159,8 @@ defmodule Phx.New.Generator do
 
   def generate_agents_md(%Project{} = project) do
     if project.binding[:agents_md] do
+      if project.binding[:html], do: copy_phoenix_turbo_rules_to(project)
+
       content =
         [
           # rules specific to new apps
@@ -165,9 +196,9 @@ defmodule Phx.New.Generator do
             ],
           project.binding[:html] &&
             [
-              "<!-- phoenix:turbo-start -->\n",
+              "<!-- phoenix_turbo_rules:turbo-start -->\n",
               @rules_files["turbo.md"],
-              "\n<!-- phoenix:turbo-end -->"
+              "\n<!-- phoenix_turbo_rules:turbo-end -->"
             ],
           project.binding[:live] &&
             [
@@ -344,7 +375,7 @@ defmodule Phx.New.Generator do
       elixir_install_bin_path: from_elixir_install && elixir_install_bin_path(),
       inside_docker_env?: inside_docker_env?,
       agents_md: agents_md,
-      config_regex_E: Version.match?(System.version(), "~> 1.19.3 or ~> 1.20") && "E" || ""
+      config_regex_E: (Version.match?(System.version(), "~> 1.19.3 or ~> 1.20") && "E") || ""
     ]
 
     %{project | binding: binding}
