@@ -2,8 +2,10 @@ defmodule <%= @web_namespace %>.PageTURBO_STREAM do
   use <%= @web_namespace %>, :html
 
   def refresh(assigns) do
+    assigns = Map.put_new_lazy(assigns, :turbo_request_id, fn -> nil end)
+
     ~H"""
-    <.turbo_stream action="refresh" request_id={@request_id} />
+    <.turbo_stream action="refresh" request_id={@turbo_request_id} />
     """
   end
 end
