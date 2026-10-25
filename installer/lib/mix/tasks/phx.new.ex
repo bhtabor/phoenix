@@ -69,7 +69,7 @@ defmodule Mix.Tasks.Phx.New do
 
     * `-v`, `--version` - prints the Phoenix installer version
 
-    * `--no-version-check` - skip the version check for the latest phx_new version
+    * `--no-version-check` - skip the version check for the latest phx_new_turbo version
 
     * `--no-agents-md` - do not generate an `AGENTS.md` file
 
@@ -194,7 +194,7 @@ defmodule Mix.Tasks.Phx.New do
 
     version_task =
       if Keyword.get(opts, :version_check, true) do
-        get_latest_version("phx_new")
+        get_latest_version("phx_new_turbo")
       end
 
     result =
@@ -319,7 +319,10 @@ defmodule Mix.Tasks.Phx.New do
 
       channel_step =
         if project.opts[:umbrella] do
-          ["$ cd #{relative_app_path(project.web_path)}", "$ mix phx.gen.socket User --from-channel TurboStream"]
+          [
+            "$ cd #{relative_app_path(project.web_path)}",
+            "$ mix phx.gen.socket User --from-channel TurboStream"
+          ]
         else
           ["$ mix phx.gen.socket User --from-channel TurboStream"]
         end
@@ -555,7 +558,7 @@ defmodule Mix.Tasks.Phx.New do
     if Version.compare(@version, latest_version) == :lt do
       Mix.shell().info([
         :yellow,
-        "A new version of phx.new is available:",
+        "A new version of phx_new_turbo is available:",
         :green,
         " v#{latest_version}",
         :reset,

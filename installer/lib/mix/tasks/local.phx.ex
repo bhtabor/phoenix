@@ -8,11 +8,11 @@ defmodule Mix.Tasks.Local.Phx do
 
       $ mix local.phx
 
-  Accepts the same command line options as `archive.install hex phx_new`.
+  Accepts the same command line options as `archive.install hex phx_new_turbo`.
   """
 
   @impl true
   def run(args) do
-    Mix.Task.run("archive.install", ["hex", "phx_new" | args])
+    Mix.Task.run("archive.install", ["hex", "phx_new_turbo" | args])
   end
 end
